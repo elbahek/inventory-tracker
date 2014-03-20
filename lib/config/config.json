@@ -1,0 +1,10 @@
+{
+    "dev": {
+        "environment": "dev",
+        "port": 3000
+    },
+    "prod": {
+        "environment": "prod",
+        "port": 3000
+    }
+}

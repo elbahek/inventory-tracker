@@ -1,0 +1,17 @@
+{
+  "name": "inventory-tracker",
+  "version": "0.0.0",
+  "authors": [
+    "elbahek <ivan.abdulin@gmail.com>"
+  ],
+  "main": "server.js",
+  "license": "ISC",
+  "private": true,
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ]
+}
