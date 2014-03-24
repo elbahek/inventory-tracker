@@ -7,14 +7,13 @@
     <link rel="stylesheet" type="text/css" href="/vendor/bootstrap/dist/css/bootstrap.css">
     <link rel="stylesheet" type="text/css" href="/vendor/bootstrap/dist/css/bootstrap-theme.css">
     <link rel="stylesheet" type="text/css" href="/assets/css/fonts.css">
-    <link rel="stylesheet/less" type="text/css" href="/assets/less/main.less">
-    <script type="text/javascript" src="/vendor/less.js/dist/less-1.7.0.js"></script>
+    <link rel="stylesheet" type="text/css" href="/assets/css/main.css">
 </head>
 <body ng-app="inventoryTracker">
     <div data-ng-controller="MainController">
         <tabset id="main-menu">
             <tab select="go('/')" heading="Inventory"></tab>
-            <tab select="go('/rpg-settings')" heading="Game settings"></tab>
+            <tab select="settings('/')" heading="Settings" disabled=true></tab>
         </tabset>
         <ng-view></ng-view>
     </div>
