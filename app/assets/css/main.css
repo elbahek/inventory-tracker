@@ -5,6 +5,45 @@ body {
     font-weight: normal;
 }
 
+h1, h2, h3, h4, h5, h6 {
+    margin: 0;
+}
+
+ul {
+    margin: 0;
+    padding: 0;
+}
+
+ul li {
+    margin: 0;
+    padding: 0;
+    list-style-type: none;
+    list-style-position: inside;
+}
+
+.row.no-space .col-lg-12, .row.no-space .col-lg-11, .row.no-space .col-lg-10, .row.no-space .col-lg-9,
+.row.no-space .col-lg-8,  .row.no-space .col-lg-7,  .row.no-space .col-lg-6,  .row.no-space .col-lg-5,
+.row.no-space .col-lg-4,  .row.no-space .col-lg-3,  .row.no-space .col-lg-2,  .row.no-space .col-lg-1 {
+    padding-left: 2px;
+    padding-right: 3px;
+}
+
+.row.no-space .col-lg-12:first-child, .row.no-space .col-lg-11:first-child, .row.no-space .col-lg-10:first-child, .row.no-space .col-lg-9:first-child,
+.row.no-space .col-lg-8:first-child,  .row.no-space .col-lg-7:first-child,  .row.no-space .col-lg-6:first-child,  .row.no-space .col-lg-5:first-child,
+.row.no-space .col-lg-4:first-child,  .row.no-space .col-lg-3:first-child,  .row.no-space .col-lg-2:first-child,  .row.no-space .col-lg-1:first-child {
+    padding-left: 15px;
+}
+
+.row.no-space .col-lg-12:last-child, .row.no-space .col-lg-11:last-child, .row.no-space .col-lg-10:last-child, .row.no-space .col-lg-9:last-child,
+.row.no-space .col-lg-8:last-child,  .row.no-space .col-lg-7:last-child,  .row.no-space .col-lg-6:last-child,  .row.no-space .col-lg-5:last-child,
+.row.no-space .col-lg-4:last-child,  .row.no-space .col-lg-3:last-child,  .row.no-space .col-lg-2:last-child,  .row.no-space .col-lg-1:last-child {
+    padding-right: 15px;
+}
+
+#main-menu {
+    margin-bottom: 1em;
+}
+
 #main-menu ul {
     text-align: center;
 }
@@ -17,4 +56,36 @@ body {
 #main-menu ul li a {
     font-family: robotoregular;
     font-size: 1.6em;
+}
+
+.character-column h4 {
+    text-align: center;
+}
+
+ul.items {
+
+}
+
+ul.items li {
+    padding: 0.5em 0;
+    border-bottom: 1px dotted rgb(221, 221, 221);
+}
+
+ul.items li .item-name span,
+ul.items li .item-qty span {
+    cursor: pointer;
+}
+
+ul.items li .item-name span:hover,
+ul.items li .item-qty span:hover {
+    text-decoration: underline;
+}
+
+ul.items li .item-qty-wrapper,
+ul.items li .delete-item-wrapper {
+    text-align: right;
+}
+
+ul.items li .item-name-editor {
+    /*display: none;*/
 }
