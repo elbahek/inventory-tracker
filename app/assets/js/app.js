@@ -5,14 +5,14 @@ angular.module('inventoryTracker', ['ngRoute', 'ui.bootstrap'])
                 templateUrl: '/views/inventory.html'
             })
     })
-    .directive('ngEnter', function () {
+    .directive('itEnter', function () {
         return {
             restrict: 'A',
-            link:function (scope, element, attrs) {
+            link: function (scope, element, attrs) {
                 element.bind("keydown keypress", function (event) {
                     if(event.which === 13) {
                         scope.$apply(function () {
-                            scope.$eval(attrs.ngEnter);
+                            scope.$eval(attrs.itEnter);
                         });
                         event.preventDefault();
                     }
@@ -20,18 +20,33 @@ angular.module('inventoryTracker', ['ngRoute', 'ui.bootstrap'])
             }
         }
     })
-    .directive('ngEsc', function() {
+    .directive('itEsc', function() {
         return {
             restrict: 'A',
             link: function(scope, element, attrs) {
                 element.bind("keydown keypress", function (event) {
                     if (event.which === 27) {
                         scope.$apply(function () {
-                            scope.$eval(attrs.ngEsc);
+                            scope.$eval(attrs.itEsc);
                         });
                         event.preventDefault();
                     }
                 });
+            }
+        }
+    })
+    .directive('itGrabFocus', function() {
+        return {
+            restrict: 'A',
+            link: function(scope, element, attrs) {
+                scope.$watch('[editingNameCharacterId, editingNameItemId]', function(newValues) {
+                    var characterId = newValues[0];
+                    var itemId = newValues[1];
+                    if (scope.$parent.character.id === characterId && scope.item.id === itemId && characterId !== null && itemId !== null) {
+                        // element[0].focus();
+                        console.log(element[0]);
+                    }
+                }, true);
             }
         }
     })
@@ -114,7 +129,7 @@ angular.module('inventoryTracker', ['ngRoute', 'ui.bootstrap'])
             });
         }
 
-        $scope.startEditItemName = function(characterId, itemId) {
+        $scope.startEditItemName = function(characterId, itemId, event) {
             findItemById(characterId, itemId, function(item) {
                 $scope.editingNameCharacterId = characterId;
                 $scope.editingNameItemId = itemId;

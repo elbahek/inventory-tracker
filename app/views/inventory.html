@@ -16,10 +16,10 @@
                                 </div>
                                 <div class="col-lg-7 item-name-wrapper">
                                     <div class="item-name" ng-hide="isEditingItemName(character.id, item.id)">
-                                        <span ng-click="startEditItemName(character.id, item.id)">{{item.name}}</span>
+                                        <span ng-click="startEditItemName(character.id, item.id, $event)">{{item.name}}</span>
                                     </div>
                                     <div class="item-name-editor" ng-show="isEditingItemName(character.id, item.id)">
-                                        <input type="text" class="form-control input-sm" ng-model="item.name" ng-enter="saveItemName(character.id, item.id)" ng-esc="cancelEditItemName(character.id, item.id)" ng-blur="cancelEditItemName(character.id, item.id)">
+                                        <input type="text" class="form-control input-sm" ng-model="item.name" it-enter="saveItemName(character.id, item.id)" it-esc="cancelEditItemName(character.id, item.id)" ng-blur="cancelEditItemName(character.id, item.id)" it-grab-focus>
                                     </div>
                                 </div>
                                 <div class="col-lg-2 item-qty-wrapper">
@@ -27,7 +27,7 @@
                                         <span ng-click="startEditItemQty(character.id, item.id)">{{item.quantity}}</span>
                                     </div>
                                     <div class="item-qty-editor" ng-show="isEditingItemQty(character.id, item.id)">
-                                        <input type="text" class="form-control input-sm" ng-model="item.quantity" ng-enter="saveItemQty(character.id, item.id)" ng-esc="cancelEditItemQty(character.id, item.id)" ng-blur="cancelEditItemQty(character.id, item.id)">
+                                        <input type="text" class="form-control input-sm" ng-model="item.quantity" it-enter="saveItemQty(character.id, item.id)" it-esc="cancelEditItemQty(character.id, item.id)" ng-blur="cancelEditItemQty(character.id, item.id)">
                                     </div>
                                 </div>
                                 <div class="col-lg-1 delete-item-wrapper">
