@@ -35,7 +35,7 @@ angular.module('inventoryTracker', ['ngRoute', 'ui.bootstrap'])
             }
         }
     })
-    .directive('itGrabFocus', function() {
+    .directive('itEditNameGrabFocus', function($timeout) {
         return {
             restrict: 'A',
             link: function(scope, element, attrs) {
@@ -43,8 +43,25 @@ angular.module('inventoryTracker', ['ngRoute', 'ui.bootstrap'])
                     var characterId = newValues[0];
                     var itemId = newValues[1];
                     if (scope.$parent.character.id === characterId && scope.item.id === itemId && characterId !== null && itemId !== null) {
-                        // element[0].focus();
-                        console.log(element[0]);
+                        $timeout(function(){
+                            element[0].focus();
+                        },0);
+                    }
+                }, true);
+            }
+        }
+    })
+    .directive('itEditQtyGrabFocus', function($timeout) {
+        return {
+            restrict: 'A',
+            link: function(scope, element, attrs) {
+                scope.$watch('[editingQtyCharacterId, editingQtyItemId]', function(newValues) {
+                    var characterId = newValues[0];
+                    var itemId = newValues[1];
+                    if (scope.$parent.character.id === characterId && scope.item.id === itemId && characterId !== null && itemId !== null) {
+                        $timeout(function(){
+                            element[0].focus();
+                        },0);
                     }
                 }, true);
             }
