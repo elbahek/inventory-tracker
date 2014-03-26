@@ -5,7 +5,7 @@ angular.module('inventoryTracker', ['ngRoute', 'ui.bootstrap'])
                 templateUrl: '/views/inventory.html'
             })
     })
-    .directive('itEnter', function () {
+    .directive('itEnter', function ($timeout) {
         return {
             restrict: 'A',
             link: function (scope, element, attrs) {
@@ -15,12 +15,15 @@ angular.module('inventoryTracker', ['ngRoute', 'ui.bootstrap'])
                             scope.$eval(attrs.itEnter);
                         });
                         event.preventDefault();
+                        $timeout(function(){
+                            element[0].blur();
+                        },0);
                     }
                 });
             }
         }
     })
-    .directive('itEsc', function() {
+    .directive('itEsc', function($timeout) {
         return {
             restrict: 'A',
             link: function(scope, element, attrs) {
@@ -30,6 +33,9 @@ angular.module('inventoryTracker', ['ngRoute', 'ui.bootstrap'])
                             scope.$eval(attrs.itEsc);
                         });
                         event.preventDefault();
+                        $timeout(function(){
+                            element[0].blur();
+                        },0);
                     }
                 });
             }
@@ -72,7 +78,7 @@ angular.module('inventoryTracker', ['ngRoute', 'ui.bootstrap'])
             $location.path(path);
         }
     })
-    .controller('InventoryController', function($scope) {
+    .controller('InventoryController', function($scope, $timeout) {
         $scope.itemTypes = ['weapon', 'ammo', 'other'];
         $scope.editingNameCharacterId = null;
         $scope.editingNameItemId = null;
@@ -86,10 +92,13 @@ angular.module('inventoryTracker', ['ngRoute', 'ui.bootstrap'])
                 characterName: 'bahek',
                 playerName: 'bahek',
                 position: 0,
+                newItemType: 'weapon',
+                newItemName: '',
+                newItemQuantity: 1,
                 items: [
-                    { id: 1, position: 0, name: 'Plasma rifle', type: 'weapon', quantity: 1 },
-                    { id: 2, position: 1, name: 'MFC', type: 'ammo', quantity: 30 },
-                    { id: 3, position: 2, name: 'Laptop', type: 'other', quantity: 1 }
+                    { id: 1, name: 'Plasma rifle', type: 'weapon', quantity: 1 },
+                    { id: 2, name: 'MFC', type: 'ammo', quantity: 30 },
+                    { id: 3, name: 'Laptop', type: 'other', quantity: 1 }
                 ]
             },
             {
@@ -97,10 +106,13 @@ angular.module('inventoryTracker', ['ngRoute', 'ui.bootstrap'])
                 characterName: 'bahek evil twin',
                 playerName: 'bahek evil twin',
                 position: 1,
+                newItemType: 'weapon',
+                newItemName: '',
+                newItemQuantity: 1,
                 items: [
-                    { id: 1, position: 0, name: 'PM', type: 'weapon', quantity: 1 },
-                    { id: 2, position: 1, name: '9mm', type: 'ammo', quantity: 5 },
-                    { id: 3, position: 2, name: 'Shiv', type: 'weapon', quantity: 1 }
+                    { id: 1, name: 'PM', type: 'weapon', quantity: 1 },
+                    { id: 2, name: '9mm', type: 'ammo', quantity: 5 },
+                    { id: 3, name: 'Shiv', type: 'weapon', quantity: 1 }
                 ]
             }
         ];
@@ -128,9 +140,8 @@ angular.module('inventoryTracker', ['ngRoute', 'ui.bootstrap'])
         }
 
         $scope.deleteItem = function(characterId, itemId) {
-            findItemById(characterId, itemId, function(item, character) {
-                character.items.splice(item.position, 1);
-                fixPositionProperties(character.items);
+            findItemById(characterId, itemId, function(item, itemPosition, character) {
+                character.items.splice(itemPosition, 1);
             });
         }
 
@@ -177,6 +188,44 @@ angular.module('inventoryTracker', ['ngRoute', 'ui.bootstrap'])
             });
         }
 
+        $scope.cancelNewItemCreation = function(characterId) {
+            findCharacterById(characterId, function(character) {
+                character.newItemName = '';
+                character.newItemQuantity = 1;
+            });
+        }
+
+        $scope.focusNewItemQty = function(index) {
+            $timeout(function(){
+                document.querySelectorAll('.character-column .add-new-item .item-qty-wrapper input')[index].focus();
+            },0);
+        }
+
+        $scope.addNewItem = function(characterId) {
+            findCharacterById(characterId, function(character) {
+                character.items.push({
+                    id: generateNewItemId(character.items),
+                    type: character.newItemType,
+                    name: character.newItemName,
+                    quantity: character.newItemQuantity
+                });
+                console.log(character.items);
+            });
+            $scope.cancelNewItemCreation(characterId);
+        }
+
+        $scope.changeNewItemType = function(characterId) {
+            findCharacterById(characterId, function(character) {
+                var itemTypeIndex = $scope.itemTypes.indexOf(character.newItemType);
+                if (itemTypeIndex === -1) return;
+                itemTypeIndex++;
+                if (itemTypeIndex === $scope.itemTypes.length) {
+                    itemTypeIndex = 0;
+                }
+                character.newItemType = $scope.itemTypes[itemTypeIndex];
+            });
+        }
+
         $scope.startEditItemQty = function(characterId, itemId) {
             findItemById(characterId, itemId, function(item) {
                 $scope.editingQtyCharacterId = characterId;
@@ -208,16 +257,34 @@ angular.module('inventoryTracker', ['ngRoute', 'ui.bootstrap'])
             });
         }
 
-        var findItemById = function(characterId, itemId, itemCallback) {
+        var findCharacterById = function(characterId, characterCallback) {
             inventoryLoop:
             for (var i in $scope.inventory) {
                 if ($scope.inventory[i].id !== characterId) continue;
-                for (var j in $scope.inventory[i].items) {
-                    if ($scope.inventory[i].items[j].id !== itemId) continue;
-                    itemCallback($scope.inventory[i].items[j], $scope.inventory[i]);
-                    break inventoryLoop;
+                characterCallback($scope.inventory[i]);
+                break inventoryLoop;
+            }
+        }
+
+        var findItemById = function(characterId, itemId, itemCallback) {
+            findCharacterById(characterId, function(character) {
+                itemsLoop:
+                for (var i in character.items) {
+                    if (character.items[i].id !== itemId) continue;
+                    itemCallback(character.items[i], i, character);
+                    break itemsLoop;
+                }
+            })
+        }
+
+        var generateNewItemId = function(items) {
+            var biggestId = 0;
+            for (var i in items) {
+                if (items[i].id > biggestId) {
+                    biggestId = items[i].id;
                 }
             }
+            return biggestId + 1;
         }
 
         var fixPositionProperties = function(list) {

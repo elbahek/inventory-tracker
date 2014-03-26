@@ -10,6 +10,23 @@
                     </div>
                     <div class="panel-body">
                         <ul class="items">
+                            <li class="add-new-item">
+                                <div class="row">
+                                    <div class="col-lg-2 item-type-wrapper">
+                                        <i class="item-type" title="{{inventory[$index].newItemType}}" ng-click="changeNewItemType(character.id)">{{inventory[$index].newItemType}}</i>
+                                    </div>
+                                    <div class="col-lg-7 item-name-wrapper">
+                                        <div class="item-name-editor">
+                                            <input type="text" class="form-control input-sm" ng-model="inventory[$index].newItemName" it-enter="focusNewItemQty($index)" it-esc="cancelNewItemCreation(character.id)" placeholder="New item">
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-2 col-lg-offset-1 item-qty-wrapper">
+                                        <div class="item-qty-editor">
+                                            <input type="text" class="form-control input-sm" ng-model="inventory[$index].newItemQuantity" it-enter="addNewItem(character.id)" it-esc="cancelNewItemCreation(character.id)">
+                                        </div>
+                                    </div>
+                                </div>
+                            </li>
                             <li ng-repeat="item in character.items">
                                 <div class="row">
                                     <div class="col-lg-2 item-type-wrapper">
