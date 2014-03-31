@@ -21,6 +21,10 @@ ul li {
     list-style-position: inside;
 }
 
+it-size-tracker {
+    visibility: hidden;
+}
+
 .row.no-space .col-lg-12, .row.no-space .col-lg-11, .row.no-space .col-lg-10, .row.no-space .col-lg-9,
 .row.no-space .col-lg-8,  .row.no-space .col-lg-7,  .row.no-space .col-lg-6,  .row.no-space .col-lg-5,
 .row.no-space .col-lg-4,  .row.no-space .col-lg-3,  .row.no-space .col-lg-2,  .row.no-space .col-lg-1 {

@@ -11,7 +11,8 @@
     <link rel="stylesheet" type="text/css" href="/assets/css/main.css">
 </head>
 <body ng-app="inventoryTracker">
-    <div data-ng-controller="MainController">
+    <div ng-controller="MainController">
+        <it-size-tracker></it-size-tracker>
         <tabset id="main-menu">
             <tab select="go('/')" heading="Inventory"></tab>
             <tab select="settings('/')" heading="Settings" disabled=true></tab>
