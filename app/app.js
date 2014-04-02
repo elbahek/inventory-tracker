@@ -1,4 +1,4 @@
-var app = angular.module('inventoryTracker', ['ngRoute', 'ngResource', 'ui.bootstrap'])
+var app = angular.module('inventoryTracker', ['ngRoute', 'ngResource', 'ui.bootstrap', 'angular-carousel'])
 app.config(function($routeProvider) {
     $routeProvider
         .when('/', {

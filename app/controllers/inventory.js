@@ -13,32 +13,22 @@ app.controller('InventoryController', function($scope, $timeout, inventoryFactor
     $scope.editingQtyCharacterId = null;
     $scope.editingQtyItemId = null;
     $scope.oldItemQty = null;
+    $scope.currentPageNumber = 0;
 
-    inventoryFactory.get(function(result) {
-        $scope.inventory = result.data;
-    });
+    $scope.nextPage = function(event) {
+        $scope.currentPageNumber++;
+        event.preventDefault();
+    }
 
-    $scope.calculateBootstrapClasses = function(isFirstColumn) {
-        var classes = '';
-        switch (Object.keys($scope.inventory).length) {
-            case 1:
-                classes += 'col-lg-6';
-                classes += isFirstColumn ? ' col-lg-offset-3' : '';
-                break;
-            case 2:
-                classes += 'col-lg-4';
-                classes += isFirstColumn ? ' col-lg-offset-2' : '';
-                break;
-            case 3:
-                classes += 'col-lg-4';
-                break;
-            default:
-                classes += 'col-lg-3';
-                break;
-        }
-        
-        return classes;
-    };
+    $scope.prevPage = function(event) {
+        $scope.currentPageNumber--;
+        event.preventDefault();
+    }
+
+    $scope.goToPage = function(pageIndex) {
+        $scope.currentPageNumber = pageIndex;
+        event.preventDefault();
+    }
 
     $scope.deleteItem = function(characterId, itemId) {
         findItemById(characterId, itemId, function(item, itemPosition, character) {
@@ -110,7 +100,6 @@ app.controller('InventoryController', function($scope, $timeout, inventoryFactor
                 name: character.newItemName,
                 quantity: character.newItemQuantity
             });
-            console.log(character.items);
         });
         $scope.cancelNewItemCreation(characterId);
     };
@@ -158,12 +147,87 @@ app.controller('InventoryController', function($scope, $timeout, inventoryFactor
         });
     };
 
+    $scope.arrangeInventoryByPages = function() {
+        var pages = [];
+        var pageNumber = 0;
+        for (var ch in $scope.inventory) {
+            ch = parseInt(ch);
+            if (typeof pages[pageNumber] === 'undefined') {
+                pages[pageNumber] = []
+            }
+            pages[pageNumber].push($scope.inventory[ch]);
+            pages[pageNumber][pages[pageNumber].length - 1].pageNumber = pageNumber + 1;
+            if (ch === 0) continue;
+            if ((ch + 1) % $scope.inventoryLayoutSettings[$scope.viewportType].maxColumnsPerPage === 0) {
+                pageNumber++;
+            }
+        }
+
+        $scope.inventoryByPages = pages;
+    };
+
+    $scope.determineColumnClasses = function(pageIndex, columnIndex, isFirstColumn) {
+        var classes = '';
+        var columnsNumberOnThisPage = $scope.inventoryByPages[pageIndex].length;
+        if ($scope.viewportType === 'lg') {
+            switch (columnsNumberOnThisPage) {
+                case 1:
+                    classes += 'col-lg-6 col-lg-offset-3';
+                    break;
+                case 2:
+                    classes += 'col-lg-4';
+                    if (isFirstColumn)
+                        classes += ' col-lg-offset-2';
+                    break;
+                case 3:
+                    classes += 'col-lg-4';
+                    break;
+                case 4:
+                default:
+                    classes += 'col-lg-3';
+                    break;
+            }
+        }
+        else if ($scope.viewportType === 'md') {
+            switch (columnsNumberOnThisPage) {
+                case 1:
+                    classes += 'col-md-8 col-lg-offset-2';
+                    break;
+                case 2:
+                    classes += 'col-md-6';
+                    break;
+                case 3:
+                default:
+                    classes += 'col-md-4';
+                    break;
+            }
+        }
+        else if ($scope.viewportType === 'sm') {
+            switch (columnsNumberOnThisPage) {
+                case 1:
+                    classes += 'col-sm-8 col-sm-offset-2';
+                    break;
+                case 2:
+                default:
+                    classes += 'col-sm-6';
+                    break;
+            }
+        }
+        else if ($scope.viewportType === 'xs') {
+            classes += 'col-xs-12';
+        }
+
+        return classes;
+    }
+
     var findCharacterById = function(characterId, characterCallback) {
         inventoryLoop:
-        for (var i in $scope.inventory) {
-            if ($scope.inventory[i].id !== characterId) continue;
-            characterCallback($scope.inventory[i]);
-            break inventoryLoop;
+        for (var pageNumber in $scope.inventoryByPages) {
+            for (var ch in $scope.inventoryByPages[pageNumber]) {
+                if ($scope.inventoryByPages[pageNumber][ch].id !== characterId) continue;
+                characterCallback($scope.inventoryByPages[pageNumber][ch]);
+                break inventoryLoop;
+            }
         }
     };
 
@@ -194,4 +258,12 @@ app.controller('InventoryController', function($scope, $timeout, inventoryFactor
             list[i].position = parseInt(i);
         }
     };
+
+    inventoryFactory.get(function(result) {
+        $scope.inventory = result.data;
+        $scope.arrangeInventoryByPages();
+        $scope.$watch('viewportType', function(newValue) {
+            $scope.arrangeInventoryByPages();
+        });
+    });
 });

@@ -13,7 +13,6 @@ app.directive('itSizeTracker', function($window) {
                     scope.viewportType = 'md';
                 else
                     scope.viewportType = 'lg';
-                console.log(scope.viewportWidth, scope.viewportType);
             };
             scope.setViewportInfo();
             return angular.element($window).bind('resize', function() {
