@@ -14,6 +14,8 @@ app.controller('InventoryController', function($scope, $timeout, inventoryFactor
     $scope.editingQtyItemId = null;
     $scope.oldItemQty = null;
     $scope.currentPageNumber = 0;
+    $scope.itemTypesFilterState = {};
+    $scope.itemsOrder = 'By type';
 
     $scope.nextPage = function(event) {
         $scope.currentPageNumber++;
@@ -258,6 +260,10 @@ app.controller('InventoryController', function($scope, $timeout, inventoryFactor
             list[i].position = parseInt(i);
         }
     };
+
+    for (var i in $scope.itemTypes) {
+        $scope.itemTypesFilterState[$scope.itemTypes[i]] = true;
+    }
 
     inventoryFactory.get(function(result) {
         $scope.inventory = result.data;

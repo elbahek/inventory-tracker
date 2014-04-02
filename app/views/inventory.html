@@ -1,9 +1,18 @@
 <div ng-controller="InventoryController">
-    <ul class="pagination" id="characters-pager" ng-show="inventoryByPages.length > 1">
-        <li ng-class="{ disabled: currentPageNumber === 0 }"><a href="#" ng-click="prevPage($event)">&laquo;</a></li>
-        <li ng-repeat="page in inventoryByPages" ng-class="{ active: currentPageNumber === $index }"><a href="#" ng-click="goToPage($index)">{{$index + 1}}</a></li>
-        <li ng-class="{ disabled: currentPageNumber === inventoryByPages.length - 1 }"><a href="#" ng-click="nextPage($event)">&raquo;</a></li>
-    </ul>
+    <div id="inventory-controls">
+        <div class="btn-group items-order-checkboxes">
+            <button type="button" class="btn btn-default active" ng-model="itemsOrder" btn-radio="'By type'">By type</button>
+            <button type="button" class="btn btn-default" ng-model="itemsOrder" btn-radio="'By name'">By name</button>
+        </div>
+        <div class="btn-group type-filter-checkboxes">
+            <button type="button" class="btn" ng-class="{ 'btn-primary': type==='weapon', 'btn-success': type==='ammo', 'btn-warning': type==='other' }" ng-repeat="type in itemTypes" ng-model="itemTypesFilterState[type]" btn-checkbox>{{type}}</button>
+        </div>
+        <ul class="pagination" ng-show="inventoryByPages.length > 1">
+            <li ng-class="{ disabled: currentPageNumber === 0 }"><a href="#" ng-click="prevPage($event)">&laquo;</a></li>
+            <li ng-repeat="page in inventoryByPages" ng-class="{ active: currentPageNumber === $index }"><a href="#" ng-click="goToPage($index)">{{$index + 1}}</a></li>
+            <li ng-class="{ disabled: currentPageNumber === inventoryByPages.length - 1 }"><a href="#" ng-click="nextPage($event)">&raquo;</a></li>
+        </ul>
+    </div>
     <div class="container-fluid">
         <div class="row no-space">
             <ul rn-carousel rn-carousel-index="currentPageNumber">
@@ -34,7 +43,7 @@
                                             </div>
                                         </div>
                                     </li>
-                                    <li ng-repeat="item in character.items">
+                                    <li ng-repeat="item in character.items | itemTypeFilter:itemTypesFilterState">
                                         <div class="row">
                                             <div class="col-lg-2 item-type-wrapper">
                                                 <i class="item-type" title="{{item.type}}" ng-click="changeItemType(character.id, item.id)">{{item.type}}</i>

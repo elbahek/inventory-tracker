@@ -3,6 +3,7 @@ body {
     font-family: open_sansregular;
     font-style: normal;
     font-weight: normal;
+    overflow-y: hidden;
 }
 
 h1, h2, h3, h4, h5, h6 {
@@ -25,12 +26,23 @@ it-size-tracker {
     visibility: hidden;
 }
 
-#characters-pager {
+#inventory-controls {
     position: absolute;
     top: 15px;
     right: 15px;
-    right: 15px;
+}
+
+#inventory-controls .btn-group,
+#inventory-controls .pagination {
+    float: left;
+}
+
+#inventory-controls .pagination {
     margin: 0;
+}
+
+#inventory-controls .btn-group {
+    margin-right: 20px;
 }
 
 .row.no-space .col-lg-12, .row.no-space .col-lg-11, .row.no-space .col-lg-10, .row.no-space .col-lg-9,
