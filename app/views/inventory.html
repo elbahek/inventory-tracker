@@ -43,7 +43,7 @@
                                             </div>
                                         </div>
                                     </li>
-                                    <li ng-repeat="item in character.items | itemTypeFilter:itemTypesFilterState">
+                                    <li ng-repeat="item in character.items | itemTypeFilter:itemTypesFilterState | orderBy:orderItemsByCheckbox">
                                         <div class="row">
                                             <div class="col-lg-2 item-type-wrapper">
                                                 <i class="item-type" title="{{item.type}}" ng-click="changeItemType(character.id, item.id)">{{item.type}}</i>

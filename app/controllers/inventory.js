@@ -17,6 +17,15 @@ app.controller('InventoryController', function($scope, $timeout, inventoryFactor
     $scope.itemTypesFilterState = {};
     $scope.itemsOrder = 'By type';
 
+    $scope.orderItemsByCheckbox = function(item) {
+        if ($scope.itemsOrder === 'By name') {
+            return item.name;
+        }
+        else {
+            return $scope.itemTypes.indexOf(item.type) + item.name;
+        }
+    }
+
     $scope.nextPage = function(event) {
         $scope.currentPageNumber++;
         event.preventDefault();
@@ -171,52 +180,28 @@ app.controller('InventoryController', function($scope, $timeout, inventoryFactor
     $scope.determineColumnClasses = function(pageIndex, columnIndex, isFirstColumn) {
         var classes = '';
         var columnsNumberOnThisPage = $scope.inventoryByPages[pageIndex].length;
-        if ($scope.viewportType === 'lg') {
-            switch (columnsNumberOnThisPage) {
-                case 1:
-                    classes += 'col-lg-6 col-lg-offset-3';
-                    break;
-                case 2:
-                    classes += 'col-lg-4';
-                    if (isFirstColumn)
-                        classes += ' col-lg-offset-2';
-                    break;
-                case 3:
-                    classes += 'col-lg-4';
-                    break;
-                case 4:
-                default:
-                    classes += 'col-lg-3';
-                    break;
-            }
-        }
-        else if ($scope.viewportType === 'md') {
-            switch (columnsNumberOnThisPage) {
-                case 1:
-                    classes += 'col-md-8 col-lg-offset-2';
-                    break;
-                case 2:
-                    classes += 'col-md-6';
-                    break;
-                case 3:
-                default:
-                    classes += 'col-md-4';
-                    break;
-            }
-        }
-        else if ($scope.viewportType === 'sm') {
-            switch (columnsNumberOnThisPage) {
-                case 1:
-                    classes += 'col-sm-8 col-sm-offset-2';
-                    break;
-                case 2:
-                default:
-                    classes += 'col-sm-6';
-                    break;
-            }
-        }
-        else if ($scope.viewportType === 'xs') {
-            classes += 'col-xs-12';
+        switch (columnsNumberOnThisPage) {
+            case 1:
+                classes += 'col-lg-6 col-lg-offset-3 ';
+                classes += 'col-md-8 col-md-offset-2 ';
+                classes += 'col-sm-8 col-sm-offset-2 ';
+                classes += 'col-xs-12 ';
+                break;
+            case 2:
+                classes += 'col-lg-4 ';
+                if (isFirstColumn)
+                    classes += ' col-lg-offset-2';
+                classes += 'col-md-6 ';
+                classes += 'col-sm-6 ';
+                break;
+            case 3:
+                classes += 'col-lg-4 ';
+                classes += 'col-md-4 ';
+                break;
+            case 4:
+            default:
+                classes += 'col-lg-3';
+                break;
         }
 
         return classes;
