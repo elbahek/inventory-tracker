@@ -15,7 +15,7 @@
     </div>
     <div class="container-fluid">
         <div class="row no-space">
-            <ul rn-carousel rn-carousel-index="currentPageNumber">
+            <ul rn-carousel rn-carousel-buffered="true" rn-carousel-index="currentPageNumber">
                 <li ng-repeat="characters in inventoryByPages" ng-init="pageIndex = $index">
                     <div ng-repeat="character in characters" class="character-column" ng-class="determineColumnClasses(pageIndex, $index, $first)">
                         <div class="panel panel-default">

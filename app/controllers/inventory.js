@@ -1,5 +1,5 @@
 var app = angular.module('inventoryTracker');
-app.controller('InventoryController', function($scope, $timeout, inventoryFactory) {
+app.controller('InventoryController', function($scope, $timeout, $document, inventoryFactory) {
     $scope.inventoryLayoutSettings = {
         lg: { maxColumnsPerPage: 4 },
         md: { maxColumnsPerPage: 3 },
@@ -190,7 +190,7 @@ app.controller('InventoryController', function($scope, $timeout, inventoryFactor
             case 2:
                 classes += 'col-lg-4 ';
                 if (isFirstColumn)
-                    classes += ' col-lg-offset-2';
+                    classes += ' col-lg-offset-2 ';
                 classes += 'col-md-6 ';
                 classes += 'col-sm-6 ';
                 break;
@@ -200,11 +200,20 @@ app.controller('InventoryController', function($scope, $timeout, inventoryFactor
                 break;
             case 4:
             default:
-                classes += 'col-lg-3';
+                classes += 'col-lg-3 ';
                 break;
         }
 
         return classes;
+    }
+
+    $scope.setColumnHeight = function() {
+        var offsetTop = document.querySelector('.character-column .panel-body').getBoundingClientRect().top;
+        var columns = document.querySelectorAll('.character-column .panel-body');
+        for (var i in columns) {
+            if (typeof columns[i].style === 'undefined') continue;
+            columns[i].style.height = ($scope.viewportHeight - offsetTop - 17) +'px';
+        }
     }
 
     var findCharacterById = function(characterId, characterCallback) {
@@ -255,6 +264,11 @@ app.controller('InventoryController', function($scope, $timeout, inventoryFactor
         $scope.arrangeInventoryByPages();
         $scope.$watch('viewportType', function(newValue) {
             $scope.arrangeInventoryByPages();
+        });
+        $scope.$watch('viewportHeight', function(newValue) {
+            $timeout(function(){
+                $scope.setColumnHeight();
+            },0);
         });
     });
 });

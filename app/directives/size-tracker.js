@@ -5,6 +5,7 @@ app.directive('itSizeTracker', function($window) {
         link: function(scope) {
             scope.setViewportInfo = function() {
                 scope.viewportWidth = $window.innerWidth;
+                scope.viewportHeight = $window.innerHeight;
                 if (scope.viewportWidth < 768)
                     scope.viewportType = 'xs';
                 else if (scope.viewportWidth >= 768 && scope.viewportWidth < 992)
